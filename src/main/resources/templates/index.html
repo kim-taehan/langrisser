@@ -1,78 +1,113 @@
-<!DOCTYPE html>
-<html 	xmlns:th="http://www.thymeleaf.org"
-         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-         layout:decorate="layout/default_layout">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet">
+  <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <style>
+    .container {
+        max-width: 1000px;
+    }
+  </style>
+</head>
 <body>
-<div layout:fragment="content">
+<div class="container">
+  <div class="py-3">
+    <h2>9번타자님 환영합니다.</h2>
+  </div>
 
-    <!-- Post content-->
-    <article>
-      <!-- Post header-->
-      <header class="mb-4">
-        <!-- Post title-->
-        <h1 class="fw-bolder mb-1">Welcome to `9번타자` 님</h1>
-        <!-- Post meta content-->
-        <div class="text-muted fst-italic mb-2">Posted on January 1, 2023 by Start Bootstrap</div>
-        <!-- Post categories-->
-        <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
-        <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
-      </header>
-      <!-- Preview image figure-->
-      <figure class="mb-4"><img class="img-fluid rounded" src="https://dummyimage.com/900x400/ced4da/6c757d.jpg" alt="..." /></figure>
-      <!-- Post content-->
-      <section class="mb-5">
-        <p class="fs-5 mb-4">Science is an enterprise that should be cherished as an activity of the free human mind. Because it transforms who we are, how we live, and it gives us an understanding of our place in the universe.</p>
-        <p class="fs-5 mb-4">The universe is large and old, and the ingredients for life as we know it are everywhere, so there's no reason to think that Earth would be unique in that regard. Whether of not the life became intelligent is a different question, and we'll see if we find that.</p>
-        <p class="fs-5 mb-4">If you get asteroids about a kilometer in size, those are large enough and carry enough energy into our system to disrupt transportation, communication, the food chains, and that can be a really bad day on Earth.</p>
-        <h2 class="fw-bolder mb-4 mt-5">I have odd cosmic thoughts every day</h2>
-        <p class="fs-5 mb-4">For me, the most fascinating interface is Twitter. I have odd cosmic thoughts every day and I realized I could hold them to myself or share them with people who might be interested.</p>
-        <p class="fs-5 mb-4">Venus has a runaway greenhouse effect. I kind of want to know what happened there because we're twirling knobs here on Earth without knowing the consequences of it. Mars once had running water. It's bone dry today. Something bad happened there as well.</p>
-      </section>
-    </article>
-    <!-- Comments section-->
-    <section class="mb-5">
-      <div class="card bg-light">
-        <div class="card-body">
-          <!-- Comment form-->
-          <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
-          <!-- Comment with nested comments-->
-          <div class="d-flex mb-4">
-            <!-- Parent comment-->
-            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-            <div class="ms-3">
-              <div class="fw-bold">Commenter Name</div>
-              If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
-              <!-- Child comment 1-->
-              <div class="d-flex mt-4">
-                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                <div class="ms-3">
-                  <div class="fw-bold">Commenter Name</div>
-                  And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
-                </div>
-              </div>
-              <!-- Child comment 2-->
-              <div class="d-flex mt-4">
-                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                <div class="ms-3">
-                  <div class="fw-bold">Commenter Name</div>
-                  When you put money directly to a problem, it makes a good headline.
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Single comment-->
-          <div class="d-flex">
-            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-            <div class="ms-3">
-              <div class="fw-bold">Commenter Name</div>
-              When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
-            </div>
-          </div>
-        </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="py-1">
+        최근 10경기 : 10승 7패 (70%)
       </div>
-    </section>
-</div>
-<script src="js/main.js"></script>
+      <div class="py-1">
+        최근 1개월 : 133승 32패 (66%)
+      </div>
+    </div>
+    <div class="col-md-8 text-end" >
+      <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/user(userName=)}'|">상대조회</button>
+      <button type="button" class="btn btn-danger">전적확인</button>
+    </div>
+  </div>
 
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">상대 ID</th>
+      <th scope="col">맵</th>
+      <th scope="col">선후공</th>
+      <th scope="col">결과</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>나비탕</td>
+      <td>서풍초소</td>
+      <td>선공</td>
+      <td>Win</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>갑꾸꾸</td>
+      <td>빛이비치는동굴</td>
+      <td>선공</td>
+      <td>Win</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>진중한동굴</td>
+      <td>트윈브릿지의파도</td>
+      <td>후공</td>
+      <td>Win</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="container">
+  <canvas id="myChart"></canvas>
+</div>
+<script>
+  var ctx = document.getElementById('myChart');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['서풍초소', '트윈브리지', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+
+</script>
 </body>
-</html>
