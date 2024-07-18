@@ -12,6 +12,13 @@
     </style>
 </head>
 <body>
-
+    <div class="px-5 m-3">
+        <div>차종</div>
+        <select th:field="*{stages}" class="form-select" th:errorclass="field-error">
+            <option value="">==차종 선택==</option>
+            <option th:each="stage : ${stages}" th:value="${stage}"
+                    th:text="${stage.getMapName()}">LIGHT</option>
+        </select>
+    </div>
 </body>
 </html>
