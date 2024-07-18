@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html 	xmlns:th="http://www.thymeleaf.org"
+         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+         layout:decorate="layout/default_layout">
+
+<head>
+  <meta charset="UTF-8">
+
+</head>
+<body>
+<div layout:fragment="content">
+
+  <!-- Post content-->
+  <article>
+    <div class="card my-12">
+      <h5 class="card-header">상대 검색</h5>
+      <div class="card-body">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search for...">
+          <span class="input-group-append">
+                <button class="btn btn-secondary" type="button">Go!</button>
+              </span>
+        </div>
+      </div>
+    </div>
+    <div class="card my-12">
+      <div class="card-body">
+        <table class="tb tb_col">
+          <colgroup>
+            <col style="width:30%;"/>
+            <col style="width:30%;"/>
+            <col style="width:30%;"/>
+          </colgroup>
+          <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">서버</th>
+            <th scope="col">포인트</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:if="${not #lists.isEmpty( users )}" th:each="row, status : ${users}">
+            <td th:text="${row.name}"></td>
+            <td th:text="${row.server.value}"></td>
+            <td th:text="${row.point}+' (' + ${row.pointRank} + ')'"></td>
+          </tr>
+          <tr th:unless="${not #lists.isEmpty( users )}">
+            <td colspan="5">
+              <div class="no_data_msg">검색된 결과가 없습니다.</div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </article>
+
+</div>
+<script src="js/main.js"></script>
+
+</body>
+</html>
