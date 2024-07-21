@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InitDataLoader {
 
-    public static final String INIT_DATA_CSV = "20240701_small.csv";
+    public static final String INIT_DATA_CSV = "initData2.csv";
     private final CsvFileReader csvFileReader;
 
     private final UserRepository userRepository;

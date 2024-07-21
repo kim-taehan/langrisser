@@ -41,17 +41,21 @@ public class Match {
 
     private LocalDateTime matchedDateTime;
 
+    @Column(length = 100)
+    private String comment;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Match(Stage stage, WinOrLose winOrLose, Orders orders, MatchType matchType, LocalDateTime matchedDateTime, User user) {
+    public Match(Stage stage, WinOrLose winOrLose, Orders orders, MatchType matchType, LocalDateTime matchedDateTime, User user, String comment) {
         this.stage = stage;
         this.winOrLose = winOrLose;
         this.orders = orders;
         this.matchType = matchType;
         this.matchedDateTime = matchedDateTime;
+        this.comment = comment;
         this.user = user;
     }
 }

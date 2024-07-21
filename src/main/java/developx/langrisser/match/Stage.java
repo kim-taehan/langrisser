@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Stage {
-
+    NONE("선택안함"),
     SHEER_CLIFF("깎아지른듯한절벽"),
     SNOW_FIELD("눈덮인벌판"),
     MOUNTAIN_TEARS("눈물의산길"),
@@ -20,6 +20,6 @@ public enum Stage {
     BROKEN_SHIP("망가진함선의길목"),
     FLOWS_LAVA("용암이 흐르는대지의_심장");
 
-    private final String mapName;
+    private final String text;
 
 }

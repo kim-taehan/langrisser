@@ -7,18 +7,96 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <style>
         .container {
-            max-width: 1000px;
+            max-width: 1300px;
         }
     </style>
 </head>
 <body>
-    <div class="px-5 m-3">
-        <div>차종</div>
-        <select th:field="*{stages}" class="form-select" th:errorclass="field-error">
-            <option value="">==차종 선택==</option>
-            <option th:each="stage : ${stages}" th:value="${stage}"
-                    th:text="${stage.getMapName()}">LIGHT</option>
-        </select>
+
+<div class="container">
+    <br/>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    나비탕 (티스라오)
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">최근전적 : 2승 8패 (80%)</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">서버</th>
+                            <th scope="col">포인트</th>
+                            <th scope="col">크리스탈</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <form action="item.html" method="post" th:object="${match}">
+                <div class="card">
+                    <div class="card-header">
+                        인게임 정보
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 py-2">
+                                <div>MatchType</div>
+                                <select th:field="*{matchType}" class="form-select" th:errorclass="field-error">
+                                    <option th:each="matchType : ${matchTypes}" th:value="${matchType}"
+                                            th:text="${matchType.getText()}">LIGHT</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8 py-2">
+                                <div>경기 맵</div>
+                                <select th:field="*{stage}" class="form-select" th:errorclass="field-error">
+                                    <option th:each="stage : ${stages}" th:value="${stage}"
+                                            th:text="${stage.getText()}">LIGHT</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 py-2">
+                                <div>선후공</div>
+                                <select th:field="*{orders}" class="form-select" th:errorclass="field-error">
+                                    <option th:each="order : ${orders}" th:value="${order}"
+                                            th:text="${order.getText()}">LIGHT</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 py-2">
+                                <label for="comment">경기 한줄 코멘트</label>
+                                <input type="text" id="comment" th:field="*{comment}" class="form-control" placeholder="comments를 입력해주세요">
+                            </div>
+                            <div class="col-md-8">
+                            </div>
+                            <div class="col-md-2 py-2">
+                                <div class="col">
+                                    <button class="w-100 btn btn-primary btn-lg" type="submit" th:formaction="@{/matches/WIN/{userId}(userId=${user.id})}">승리</button>
+                                </div>
+                            </div>
+                            <div class="col-md-2 py-2">
+                                <div class="col">
+                                    <button class="w-100 btn btn-secondary btn-lg" type="submit" th:formaction="@{/matches/LOSE/{userId}(userId=${user.id})}">패배</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
     </div>
+
+</div>
+
 </body>
 </html>
