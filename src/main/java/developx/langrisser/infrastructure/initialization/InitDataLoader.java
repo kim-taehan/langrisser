@@ -3,7 +3,7 @@ package developx.langrisser.infrastructure.initialization;
 import developx.langrisser.infrastructure.csv.CsvFileReader;
 import developx.langrisser.user.User;
 import developx.langrisser.user.UserInfo;
-import developx.langrisser.user.UserRepository;
+import developx.langrisser.user.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

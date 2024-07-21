@@ -36,7 +36,7 @@ public record MatchesData (
                 // 상대 정보
                 .userName(user.getName())
                 .userId(user.getId())
-                .server(user.getServer().getValue())
+                .server(user.getServer().getText())
                 .build();
     }
 
