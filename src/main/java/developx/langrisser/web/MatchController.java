@@ -5,6 +5,7 @@ import developx.langrisser.match.Orders;
 import developx.langrisser.match.Stage;
 import developx.langrisser.match.WinOrLose;
 import developx.langrisser.match.service.MatchCreator;
+import developx.langrisser.match.service.MatchFinder;
 import developx.langrisser.user.User;
 import developx.langrisser.user.service.UserFinder;
 import developx.langrisser.web.request.MatchRegisterRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class MatchController {
 
     private final MatchCreator matchCreator;
+    private final MatchFinder matchFinder;
     private final UserFinder userFinder;
 
     @GetMapping("{userId}")
@@ -32,6 +34,13 @@ public class MatchController {
         model.addAttribute("match", MatchRegisterRequest.initData());
         // username like 검색으로 조회합니다.
         return "match/match";
+    }
+
+    @GetMapping("")
+    public String matches(Model model) {
+        model.addAttribute("matches", matchFinder.matches());
+        // username like 검색으로 조회합니다.
+        return "match/matches";
     }
 
     @PostMapping("{winOrLose}/{userId}")

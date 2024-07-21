@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +53,9 @@ public class CsvFileReader {
 
     public File loadFileByClassLoader(String fileName) {
         ClassLoader classLoader = getClass().getClassLoader();
-        return new File(Objects.requireNonNull(classLoader.getResource(fileName)).getFile());
+        URL resource = classLoader.getResource(fileName);
+
+        return Objects.isNull(resource) ? null : new File(resource.getFile());
     }
 
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -27,7 +28,7 @@ public class InitDataLoader {
     void init() {
 
         File csvFile = csvFileReader.loadFileByClassLoader(INIT_DATA_CSV);
-        if (csvFile.exists()) {
+        if (!Objects.isNull(csvFile)) {
             initData(csvFile);
         }
     }
