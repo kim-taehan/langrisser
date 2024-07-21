@@ -19,40 +19,59 @@
                     조회 조건
                 </div>
                 <div class="card-body">
+                    <form action="item.html" th:action method="get" th:object="${userFinder}">
                     <div class="row">
                         <div class="col-md-4 py-2">
                             <label for="userName">닉네임</label>
                             <input type="text" id="userName" th:field="*{userName}" class="form-control" placeholder="닉네임으로 검색">
                         </div>
+                        <div class="col-md-4 py-2">
+                            <div>서버</div>
+                            <select th:field="*{server}" class="form-select" th:errorclass="field-error">
+                                <option th:each="server : ${servers}" th:value="${server}"
+                                        th:text="${server.getText()}">해당없음</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 py-2 text-end">
+                            <div class="col">
+                                <button class=" btn btn-secondary btn-lg" type="submit">조회</button>
+                            </div>
+                        </div>
                     </div>
-
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    조회 결과
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">서버</th>
+                            <th scope="col">포인트</th>
+                            <th scope="col">크리스탈</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user: ${users}">
+                            <td th:text="${user.name}"></td>
+                            <td th:text="${user.server}"></td>
+                            <td th:text="${user.point} + ' (' + ${user.pointRank} + ')'"></td>
+                            <td th:text="${user.cristal} + ' (' + ${user.cristalRank} + ')'"></td>
+                            <td><a href="item.html" th:href="@{|/matches/${user.id}|}">서밋하러</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">서버</th>
-            <th scope="col">포인트</th>
-            <th scope="col">크리스탈</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-                <tr th:each="user: ${users}">
-                <td th:text="${user.name}"></td>
-                <td th:text="${user.server}"></td>
-                <td th:text="${user.point} + ' (' + ${user.pointRank} + ')'"></td>
-                <td th:text="${user.cristal} + ' (' + ${user.cristalRank} + ')'"></td>
-                <td><a href="item.html" th:href="@{|/matches/${user.id}|}">서밋하러</a></td>
-            </tr>
-        </tbody>
-    </table>
 </div>
 </body>

@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.fasterxml.jackson.databind.type.LogicalType.Collection;
-
 @RequiredArgsConstructor
 @Getter
 public enum Server {
@@ -39,10 +37,10 @@ public enum Server {
     IRIS("이리스"),
     TSURUYA("츠루야");
 
-    private final String value;
+    private final String text;
 
     private final static Map<String, String> CODE_MAP = Collections.unmodifiableMap(
-            Stream.of(Server.values()).collect(Collectors.toMap(Server::getValue, Server::name))
+            Stream.of(Server.values()).collect(Collectors.toMap(Server::getText, Server::name))
     );
 
     public static Server of(final String value) {

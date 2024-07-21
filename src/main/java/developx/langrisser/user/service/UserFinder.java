@@ -2,6 +2,7 @@ package developx.langrisser.user.service;
 
 import developx.langrisser.user.User;
 import developx.langrisser.user.UserRepository;
+import developx.langrisser.web.request.UserFindRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ public class UserFinder {
         return userRepository.findById(userId).orElseThrow();
     }
 
-    public List<User> findLikeUserName(String userName) {
-        return userRepository.findByNameLike(PERCENT + userName + PERCENT);
+    public List<User> findUsers(UserFindRequest request) {
+        return userRepository.findByNameLikeAndServer(PERCENT + request.userName() + PERCENT, request.server());
     }
 }
