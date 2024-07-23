@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, UserQueryDslRepository {
     List<User> findByNameLike(String name);
+
+//    List<User> findByNameLikeAndServer(String s, Server server);
 }
