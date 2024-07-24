@@ -9,6 +9,7 @@ import developx.langrisser.match.service.MatchFinder;
 import developx.langrisser.user.User;
 import developx.langrisser.user.service.UserFinder;
 import developx.langrisser.web.request.MatchRegisterRequest;
+import developx.langrisser.web.request.MatchesRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class MatchController {
     private final UserFinder userFinder;
 
     @GetMapping("{userId}")
-    public String proposals(Model model, @PathVariable(name = "userId") Long userId) {
+    public String match(Model model, @PathVariable(name = "userId") Long userId) {
         User user = userFinder.findById(userId);
         model.addAttribute("user", user);
         model.addAttribute("match", MatchRegisterRequest.initData());
@@ -36,8 +37,12 @@ public class MatchController {
         return "match/match";
     }
 
-    @GetMapping("")
-    public String matches(Model model) {
+    @GetMapping
+    public String matches(Model model, @ModelAttribute MatchesRequest request) {
+
+        // 검색 필터를 내려줘야 한다.
+        MatchesRequest matchesRequest = request.initData();
+        model.addAttribute("matchesRequest", matchesRequest);
         model.addAttribute("matches", matchFinder.matches());
         // username like 검색으로 조회합니다.
         return "match/matches";
