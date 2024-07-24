@@ -4,6 +4,7 @@ import developx.langrisser.infrastructure.date.LocalDateFormatter;
 import developx.langrisser.match.Match;
 import developx.langrisser.match.repository.MatchRepository;
 import developx.langrisser.match.service.dto.MatchesData;
+import developx.langrisser.web.request.MatchesRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ public class MatchFinder {
 
     private final LocalDateFormatter localDateFormatter;
 
-    public List<MatchesData> matches(){
-        List<Match> matches = matchRepository.findAll();
+    public List<MatchesData> matches(MatchesRequest request){
+        List<Match> matches = matchRepository.findByCond(request);
         return matches.stream()
                 .map(match -> MatchesData.fromMatch(match, localDateFormatter))
                 .toList();

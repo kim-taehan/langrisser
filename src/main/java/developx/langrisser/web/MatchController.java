@@ -43,7 +43,7 @@ public class MatchController {
         // 검색 필터를 내려줘야 한다.
         MatchesRequest matchesRequest = request.initData();
         model.addAttribute("matchesRequest", matchesRequest);
-        model.addAttribute("matches", matchFinder.matches());
+        model.addAttribute("matches", matchFinder.matches(request));
         // username like 검색으로 조회합니다.
         return "match/matches";
     }
