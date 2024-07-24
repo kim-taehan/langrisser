@@ -1,5 +1,6 @@
 package developx.langrisser.match.service.dto;
 
+import developx.langrisser.infrastructure.date.LocalDateFormatter;
 import developx.langrisser.match.Match;
 import developx.langrisser.user.User;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public record MatchesData (
         String userName,
         String server
 ) {
-    public static MatchesData fromMatch(Match match) {
+    public static MatchesData fromMatch(Match match, LocalDateFormatter localDateFormatter) {
 
         User user = match.getUser();
         return MatchesData.builder()
@@ -31,7 +32,7 @@ public record MatchesData (
                 .orders(match.getOrders().getText())
                 .matchType(match.getMatchType().getText())
                 .comment(match.getComment())
-                .matchedDateTime(match.getMatchedDateTime().format(DateTimeFormatter.ISO_DATE_TIME))
+                .matchedDateTime(localDateFormatter.convert(match.getMatchedDateTime()))
 
                 // 상대 정보
                 .userName(user.getName())

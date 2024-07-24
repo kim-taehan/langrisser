@@ -1,10 +1,9 @@
 package developx.langrisser.match.service;
 
 import developx.langrisser.match.Match;
-import developx.langrisser.match.MatchRepository;
+import developx.langrisser.match.repository.MatchRepository;
 import developx.langrisser.user.User;
 import developx.langrisser.user.service.UserFinder;
-import developx.langrisser.web.request.MatchRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

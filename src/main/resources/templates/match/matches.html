@@ -15,6 +15,50 @@
 <div class="container">
     <br/>
     <div class="row">
+        <!-- 조회 조건 -->
+        <div class="col-md-12 py-2">
+            <div class="card">
+                <div class="card-header">
+                    조회 조건
+                </div>
+                <div class="card-body">
+                    <form th:action method="get" th:object="${matchesRequest}">
+                        <div class="row">
+                            <div class="col-md-3 py-2">
+                                <div>map</div>
+                                <select th:field="*{stage}" class="form-select" th:errorclass="field-error">
+                                    <option th:each="stage : ${stages}" th:value="${stage}"
+                                            th:text="${stage.getText()}">해당없음</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 py-2">
+                                <div>match type</div>
+                                <select th:field="*{matchType}" class="form-select" th:errorclass="field-error">
+                                    <option th:each="matchType : ${matchTypes}" th:value="${matchType}"
+                                            th:text="${matchType.getText()}">해당없음</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 py-2">
+                                <div>from date</div>
+                                <input type="date" class="form-control" th:field="*{fromDate}">
+<!--                                <input type="text" id="userName" th:field="*{userName}" class="form-control" placeholder="닉네임으로 검색">-->
+                            </div>
+                            <div class="col-md-2 py-2">
+                                <div>to date</div>
+                                <input type="date" class="form-control" th:field="*{toDate}">
+                            </div>
+
+                            <div class="col-md-4 py-2 text-end">
+                                <div class="col">
+                                    <button class=" btn btn-secondary btn-lg" type="submit">조회</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- 조회 결과 -->
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">

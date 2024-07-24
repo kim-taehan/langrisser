@@ -3,6 +3,7 @@ package developx.langrisser.web.request;
 import developx.langrisser.match.MatchType;
 import developx.langrisser.match.Stage;
 import lombok.Builder;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -10,7 +11,9 @@ import java.time.LocalDate;
 public record MatchesRequest(
         Stage stage,
         MatchType matchType,
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate fromDate,
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate toDate
 ) {
     public MatchesRequest initData() {
