@@ -2,9 +2,9 @@ package developx.langrisser.match.repository;
 
 import developx.langrisser.match.Match;
 import developx.langrisser.web.request.MatchesRequest;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface MatchQueryDslRepository {
-    List<Match> findByCond(MatchesRequest request);
+    Page<Match> findByCond(MatchesRequest request, Pageable pageable);
 }

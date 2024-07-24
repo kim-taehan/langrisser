@@ -7,9 +7,12 @@ import developx.langrisser.match.service.dto.MatchesData;
 import developx.langrisser.web.request.MatchesRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,10 +25,8 @@ public class MatchFinder {
 
     private final LocalDateFormatter localDateFormatter;
 
-    public List<MatchesData> matches(MatchesRequest request){
-        List<Match> matches = matchRepository.findByCond(request);
-        return matches.stream()
-                .map(match -> MatchesData.fromMatch(match, localDateFormatter))
-                .toList();
+    public Page<MatchesData> matches(MatchesRequest request){
+        Page<Match> matches = matchRepository.findByCond(request, Pageable.ofSize(10));
+        return matches.map(match -> MatchesData.fromMatch(match, localDateFormatter));
     }
 }
