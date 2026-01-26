@@ -1,21 +1,26 @@
+
+
 server:
   port: 9998
 
 spring:
+  profiles:
+    active: dev
+
   application:
     name: langrisser
 
   datasource:
 #    url: jdbc:h2:mem:langrisser
 #    url: jdbc:h2:file:./langrisser;DB_CLOSE_ON_EXIT=FALSE
-    url: jdbc:h2:file:./langrisser3;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:file:./langrisser;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 #    show-sql: true
 
   h2:

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 공통 설정 -->
+    <property name="LOG_PATH" value="./logs"/>
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+
+    <!-- ===================== -->
+    <!-- 콘솔 -->
+    <!-- ===================== -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ===================== -->
+    <!-- 파일 (14일 - dev) -->
+    <!-- ===================== -->
+    <appender name="FILE_DEV" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- ===================== -->
+    <!-- local -->
+    <!-- ===================== -->
+    <springProfile name="local">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- ===================== -->
+    <!-- dev -->
+    <!-- ===================== -->
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="FILE_DEV"/>
+        </root>
+    </springProfile>
+
+
+</configuration>
