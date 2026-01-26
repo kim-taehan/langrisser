@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>경기 등록</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+<body class="container py-4">
+<div th:replace="fragments/menu"></div>
+
+<h2 class="mb-4">경기 등록</h2>
+
+<div class="card">
+    <div class="card-body">
+
+        <form th:action="@{/matches}" th:object="${command}" method="post">
+
+            <!-- 상대 플레이어 -->
+            <div class="mb-4">
+                <label class="form-label">상대 플레이어</label>
+                <div class="form-control-plaintext border rounded p-2 bg-light">
+                    <strong th:text="${opponent.nickname}"></strong>
+                    <span class="ms-2 text-muted">
+                        (ID:
+                        <span th:text="${opponent.playerId}"></span>,
+                        서버:
+                        <span th:text="${opponent.server.label()}"></span>
+                        )
+                    </span>
+                </div>
+                <input type="hidden" th:field="*{opponentPlayerId}"/>
+            </div>
+
+            <!-- 1행 : 경기 날짜 / 게임 모드 -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">경기 날짜</label>
+                    <input type="date"
+                           class="form-control"
+                           th:field="*{matchDate}"
+                           required/>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">게임 모드</label>
+                    <select class="form-select" th:field="*{gameMode}">
+                        <option value="">-- 선택 --</option>
+                        <option th:each="m : ${gameModes}"
+                                th:value="${m}"
+                                th:text="${m.label}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 2행 : 스테이지 / 선후공 / 경기결과 -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">스테이지</label>
+                    <select class="form-select" th:field="*{stage}">
+                        <option value="">-- 선택 --</option>
+                        <option th:each="s : ${stages}"
+                                th:value="${s}"
+                                th:text="${s.label}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">선 / 후공</label>
+                    <select class="form-select" th:field="*{turnOrder}">
+                        <option value="">-- 선택 --</option>
+                        <option th:each="t : ${turnOrders}"
+                                th:value="${t}"
+                                th:text="${t.label}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">경기 결과</label>
+                    <select class="form-select" th:field="*{outcome}">
+                        <option value="">-- 선택 --</option>
+                        <option th:each="o : ${outcomes}"
+                                th:value="${o}"
+                                th:text="${o.label}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 메모 -->
+            <div class="mb-4">
+                <label class="form-label">메모</label>
+                <textarea class="form-control"
+                          th:field="*{memo}"
+                          rows="4"></textarea>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-primary">등록</button>
+                <a th:href="@{/players}" class="btn btn-secondary">취소</a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<div th:fragment="profileCard(player)"
+     class="card shadow-sm rounded-3 mb-3">
+
+    <div class="card-body">
+
+        <!-- 닉네임 + 서버 -->
+        <div class="mb-1 d-flex align-items-center gap-2">
+            <h4 class="mb-0 fw-bold" th:text="${player.nickname}"></h4>
+
+            <span class="badge bg-dark"
+                  th:text="${player.server.label()}">
+            </span>
+
+            <!-- 최고 성적 -->
+            <span class="badge text-dark"
+                  th:if="${player.tier != null and player.tier.name() != 'NONE'}"
+                  th:classappend="${player.badgeClass()}"
+                  th:text="${player.tier.displayName()}">
+</span>
+    </span>
+        </div>
+
+        <!-- 이전 닉네임 -->
+        <div class="text-muted small mb-2"
+             th:if="${!#lists.isEmpty(player.previousNicknames)}">
+            <span th:each="name, iter : ${player.previousNicknames}">
+                <span th:text="${name}"></span>
+                <span th:if="${!iter.last}">, </span>
+            </span>
+        </div>
+
+        <hr class="my-3"/>
+
+        <!-- 메트릭 영역 -->
+        <div class="row text-center">
+
+            <!-- 크리스탈 -->
+            <div class="col">
+                <div class="small text-muted mb-1">크리스탈</div>
+
+                <div class="fw-bold text-primary fs-5">
+                    💎 <span th:text="${player.cristal.value}"></span>
+                </div>
+
+                <div class="small text-muted"
+                     th:if="${player.cristal.rank != null}">
+                    랭킹
+                    <span th:text="${player.cristal.rank}"></span>위
+                </div>
+            </div>
+
+            <!-- 서밋 -->
+            <div class="col">
+                <div class="small text-muted mb-1">서밋</div>
+
+                <div class="fw-bold fs-5">
+                    🏔 <span th:text="${player.summit.value}"></span>
+                </div>
+
+                <div class="small text-muted"
+                     th:if="${player.summit.rank != null}">
+                    랭킹
+                    <span th:text="${player.summit.rank}"></span>위
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

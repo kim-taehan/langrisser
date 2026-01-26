@@ -1,0 +1,40 @@
+<th:block th:fragment="winLoseCard(title, stats, paramName)">
+    <div class="card shadow-sm mb-3">
+        <div class="card-body p-3">
+
+            <!-- 제목 작게 -->
+            <h6 class="card-title mb-2 fw-bold"
+                th:text="${title}">
+            </h6>
+
+            <div th:each="stat : ${stats}" class="mb-2">
+
+                <div class="d-flex justify-content-between mb-1">
+                    <a class="fw-semibold text-decoration-none"
+                       th:href="@{/matches(
+                           ${paramName}=${stat.code}
+                       )}"
+                       th:text="${stat.displayName}">
+                    </a>
+
+                    <small class="text-muted"
+                           th:text="|${stat.winCount}승 ${stat.loseCount}패 (${stat.winRate()}%)|">
+                    </small>
+                </div>
+
+                <!-- 얇은 프로그래스바 -->
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar"
+                         role="progressbar"
+                         th:classappend="
+                            ${stat.winRate() >= 70} ? ' bg-success' :
+                            (${stat.winRate() <= 30} ? ' bg-danger' : ' bg-warning')
+                         "
+                         th:style="'width:' + ${stat.winRate()} + '%'">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</th:block>

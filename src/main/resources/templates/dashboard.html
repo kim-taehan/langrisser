@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+
+<body class="bg-light">
+
+<div th:replace="fragments/menu"></div>
+
+<!-- ===== 본문 ===== -->
+<div class="container-lg mt-3">
+
+    <!-- 기간 선택 -->
+    <form th:action="@{/dashboard}" method="get" class="mb-3">
+        <div class="btn-group btn-group-sm" role="group">
+            <button th:each="p : ${T(developx.langrisser.application.dashboard.DashboardPeriod).values()}"
+                    type="submit"
+                    name="period"
+                    th:value="${p}"
+                    class="btn"
+                    th:classappend="${p == query.period} ? 'btn-primary' : 'btn-outline-primary'">
+
+                <span th:text="${p.label()}">기간</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- ===== 통계 영역 ===== -->
+    <div class="row g-3">
+
+        <!-- 좌측 -->
+        <div class="col-md-6">
+
+            <!-- 선 / 후공 -->
+            <div th:replace="~{fragments/win-lose-card ::
+                    winLoseCard(
+                        '선 / 후공 승률',
+                        ${turnOrderStats.stats},
+                        'turnOrder'
+                    )}">
+            </div>
+
+            <!-- 게임 모드 -->
+            <div th:replace="~{fragments/win-lose-card ::
+                    winLoseCard(
+                        '게임 모드별 승률',
+                        ${gameModeStats.stats},
+                        'gameMode'
+                    )}">
+            </div>
+
+        </div>
+
+        <!-- 우측 -->
+        <div class="col-md-6">
+
+            <!-- 맵 -->
+            <div th:replace="~{fragments/win-lose-card ::
+                    winLoseCard(
+                        '맵별 승률',
+                        ${stageStats.stats},
+                        'stage'
+                    )}">
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

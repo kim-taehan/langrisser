@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>경기 목록</title>
+
+    <!-- Bootstrap (local) -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('searchForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const form = e.target;
+                const params = new URLSearchParams(new FormData(form)).toString();
+                const url = form.action + (params ? '?' + params : '');
+
+                // 🔥 history 를 쌓지 않고 URL 교체
+                window.history.replaceState({}, '', url);
+
+                // 실제 조회는 reload
+                window.location.replace(url);
+            });
+
+
+            document.querySelectorAll('.comment-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const comment = btn.dataset.comment;
+                    alert(comment && comment.trim() !== '' ? comment : '코멘트가 없습니다.');
+                });
+            });
+
+            document.querySelectorAll(".delete-match-btn").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const row = e.target.closest("tr");
+                    const matchId = row.dataset.matchId;
+
+                    if (!confirm("이 경기를 삭제하시겠습니까?")) {
+                        return;
+                    }
+
+                    try {
+                        const res = await fetch(`/matches/${matchId}`, {
+                            method: "DELETE"
+                        });
+
+                        if (!res.ok) {
+                            throw new Error();
+                        }
+
+                        // ✅ 화면에서 즉시 제거
+                        const searchForm = document.getElementById("searchForm");
+                        searchForm.requestSubmit();
+
+                    } catch (e) {
+                        alert("경기 삭제 중 오류가 발생했습니다.");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body class="bg-light">
+<div th:replace="fragments/menu"></div>
+
+<div class="container mt-4">
+
+    <!-- 제목 -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">경기 목록</h2>
+    </div>
+
+    <!-- ================== 조건 검색 ================== -->
+
+    <form id="searchForm"
+          th:action="@{/matches}"
+          method="get"
+          th:object="${query}"
+          class="row g-2 mb-3">
+<!--    <form th:action="@{/matches}"-->
+<!--          method="get"-->
+<!--          th:object="${query}"-->
+<!--          class="row g-2 mb-3">-->
+
+        <!-- 게임 타입 -->
+        <div class="col-md-2">
+            <select class="form-select" th:field="*{gameMode}">
+                <option value="">전체 게임 타입</option>
+                <option th:each="m : ${gameModes}"
+                        th:value="${m}"
+                        th:text="${m.displayName()}">
+                </option>
+            </select>
+        </div>
+
+        <!-- 맵 -->
+        <div class="col-md-3">
+            <select class="form-select" th:field="*{stage}">
+                <option value="">전체 맵</option>
+                <option th:each="s : ${stages}"
+                        th:value="${s}"
+                        th:text="${s.displayName()}">
+                </option>
+            </select>
+        </div>
+
+        <!-- 선 / 후공 -->
+        <div class="col-md-2">
+            <select class="form-select" th:field="*{turnOrder}">
+                <option value="">선 / 후공</option>
+                <option th:each="t : ${turnOrders}"
+                        th:value="${t}"
+                        th:text="${t.label}">
+                </option>
+            </select>
+        </div>
+        <div class="col-md-3"></div>
+        <!-- 조회 버튼 -->
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                조회
+            </button>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">전체 성적</span>
+                    <span class="fw-semibold">
+                    <span class="text-success fw-bold"
+                          th:text="${state.totalWin}">14</span>승
+                    <span class="text-danger fw-bold ms-1"
+                          th:text="${state.totalLose}">6</span>패
+                    <span class="text-muted mx-1">·</span>
+                    <span class="fw-bold"
+                          th:text="${state.totalRate}">70</span>%
+                </span>
+                </div>
+
+                <div class="progress mt-1" style="height: 8px;">
+                    <div class="progress-bar"
+                         role="progressbar"
+                         th:classappend="
+                        ${state.totalRate} >= 70 ? 'bg-success' :
+                        (${state.totalRate} >= 30 ? 'bg-warning' : 'bg-danger')
+                     "
+                         th:style="'width:' + (${state.totalRate} ?: 0) + '%'">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">10경기</span>
+                    <span class="fw-semibold">
+                    <span class="text-success fw-bold"
+                          th:text="${state.recentWin()}">14</span>승
+                    <span class="text-danger fw-bold ms-1"
+                          th:text="${state.recentLose()}">6</span>패
+                    <span class="text-muted mx-1">·</span>
+                    <span class="fw-bold"
+                          th:text="${state.recentRate()}">70</span>%
+                </span>
+                </div>
+
+                <div class="progress mt-1" style="height: 8px;">
+                    <div class="progress-bar"
+                         role="progressbar"
+                         th:classappend="
+                        ${state.recentRate()} >= 70 ? 'bg-success' :
+                        (${state.recentRate} >= 30 ? 'bg-warning' : 'bg-danger')
+                     "
+                         th:style="'width:' + (${state.recentRate} ?: 0) + '%'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ================== 경기 목록 ================== -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>경기일</th>
+                    <th>서버</th>
+                    <th>상대 플레이어</th>
+                    <th>게임 타입</th>
+                    <th>맵</th>
+                    <th>결과</th>
+                    <th>선/후공</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody >
+                <tr th:each="m : ${matches}"
+                    th:data-match-id="${m.matchId}">
+                    <!-- 경기 날짜 -->
+                    <td th:text="${m.relativeDate}">2026-01-01</td>
+
+                    <!-- 서버 -->
+                    <td>
+                        <span class="badge bg-secondary"
+                              th:text="${m.opponentPlayer.server.label}">
+                            서버
+                        </span>
+                    </td>
+                    <!-- 상대 플레이어 -->
+                    <td>
+                        <a th:href="@{/players/{id}(id=${m.opponentPlayer.playerId})}"
+                           th:text="${m.opponentPlayer.nickname}">
+                            닉네임
+                        </a>
+                    </td>
+
+                    <!-- 게임 타입 -->
+                    <td th:text="${m.gameMode.displayName()}">게임 타입</td>
+
+                    <!-- 맵 -->
+                    <td th:text="${m.stage.displayName()}">맵</td>
+
+                    <!-- 결과 -->
+                    <td>
+                        <span class="badge"
+                              th:text="${m.outcome.label()}"
+                              th:classappend="
+                                  ${m.outcome.name() == 'WIN'} ? 'bg-success' :
+                                  (${m.outcome.name() == 'LOSE'} ? 'bg-danger' : 'bg-secondary')
+                              ">
+                        </span>
+                    </td>
+
+                    <!-- 선 / 후공 -->
+                    <td>
+                        <span class="badge turn-order"
+                              th:text="${m.turnOrder.label()}"
+                              th:classappend="
+                                  ${m.turnOrder.name() == 'FIRST'} ? 'bg-primary first' :
+                                  (${m.turnOrder.name() == 'SECOND'} ? 'bg-warning text-dark second' : 'bg-secondary')
+                              ">
+                        </span>
+                    </td>
+
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <!-- 코멘트 버튼 -->
+                            <button type="button"
+                                    class="btn btn-sm comment-btn"
+                                    th:data-comment="${m.memo}"
+                                    th:classappend="${m.memo != null and !#strings.isEmpty(m.memo)}
+                                                        ? 'btn-outline-primary'
+                                                        : 'btn-outline-secondary'">
+                                코멘트
+                            </button>
+
+                            <!-- 삭제 버튼 -->
+                            <button type="button"
+                                    class="btn btn-outline-danger delete-match-btn">
+                                삭제
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- empty -->
+                <tr th:if="${#lists.isEmpty(matches)}">
+                    <td colspan="7" class="text-center text-muted py-4">
+                        등록된 경기가 없습니다.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

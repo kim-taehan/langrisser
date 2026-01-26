@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>플레이어 목록</title>
+
+    <!-- Bootstrap (local) -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+
+    <script>
+
+        function searchPlayers() {
+            const form = document.querySelector('form');
+            const params = new URLSearchParams(new FormData(form));
+            window.location.replace('/players?' + params.toString());
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const nicknameModal = document.getElementById('nicknameModal');
+            nicknameModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+
+                const playerId = button.getAttribute('data-player-id');
+                const nickname = button.getAttribute('data-nickname');
+
+                document.getElementById('modalPlayerId').value = playerId;
+                document.getElementById('currentNickname').value = nickname;
+
+                fetch(`/players/${playerId}/detail`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const list = document.getElementById('nicknameHistory');
+                        list.innerHTML = '';
+
+                        if (data.previousNicknames.length === 0) {
+                            list.innerHTML =
+                                '<li class="list-group-item text-muted">이력이 없습니다.</li>';
+                            return;
+                        }
+
+                        data.previousNicknames.forEach(n => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item';
+                            li.innerText = n;
+                            list.appendChild(li);
+                        });
+                    });
+            });
+
+
+            const btn = document.getElementById("snapshotUpdateBtn");
+            btn.addEventListener("click", () => {
+                const url = document.getElementById("snapshotUrl").value;
+
+                fetch("/players/snapshot", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        updateLink: url
+                    })
+                }).then(res => {
+                    if (res.ok) {
+                        location.reload();
+                    } else {
+                        alert("스냅샷 업데이트 실패");
+                    }
+                });
+            });
+
+        });
+    </script>
+</head>
+<body class="bg-light">
+<div th:replace="fragments/menu"></div>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">플레이어 목록</h2>
+
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-primary"
+               data-bs-toggle="modal"
+               data-bs-target="#syncSnapshotModal">
+                🔄 어쿄시트와 연동
+            </a>
+            <a class="btn btn-primary"
+               data-bs-toggle="modal"
+               data-bs-target="#playerCreateModal">
+                ➕ 랑린이 추가
+            </a>
+        </div>
+    </div>
+
+
+    <form th:action="@{/players}" method="get"
+          th:object="${query}"
+          class="row g-2 mb-3">
+
+        <!-- 닉네임 -->
+        <div class="col-md-3">
+            <input type="text"
+                   class="form-control"
+                   placeholder="플레이어 이름"
+                   th:field="*{nickname}">
+        </div>
+
+        <!-- 서버 -->
+        <div class="col-md-2">
+            <select class="form-select" th:field="*{server}">
+                <option value="">전체 서버</option>
+                <option th:each="server : ${T(developx.langrisser.domain.player.ServerType).values()}"
+                        th:value="${server}"
+                        th:text="${server.displayName()}">
+                </option>
+            </select>
+        </div>
+
+        <!-- 특수 아이디 -->
+        <div class="col-md-2">
+            <div class="form-check mt-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       th:field="*{specialOnly}"
+                       id="specialOnly">
+                <label class="form-check-label" for="specialOnly">
+                    특수 아이디만
+                </label>
+            </div>
+        </div>
+
+        <div class="col-md-3"></div>
+        <!-- 조회 -->
+        <div class="col-md-2">
+            <button type="button"
+                    class="btn btn-primary w-100"
+                    onclick="searchPlayers()">
+                조회
+            </button>
+        </div>
+    </form>
+
+
+    <!-- 플레이어 테이블 -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>서버</th>
+                    <th>닉네임</th>
+                    <th>Cristal</th>
+                    <th>Summit</th>
+                    <th>최고성적</th>
+                    <th>마지막 경기일자</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="player : ${players}">
+                    <td>
+                        <span class="badge bg-secondary"
+                              th:text="${player.server.label()}">
+                            서버
+                        </span>
+                    </td>
+                    <td>
+                        <a th:href="@{/players/{id}(id=${player.playerId})}"
+                           class="fw-semibold text-decoration-none">
+                            <span th:text="${player.nickname}"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <span class="fw-semibold"
+                              th:text="${#numbers.formatInteger(player.cristal.value, 3, 'COMMA')}">
+                            0
+                        </span>
+                        <span class="text-muted ms-1 small"
+                              th:text="|(${player.cristal.rank != null ? player.cristal.rank + '위' : '랭킹 없음'})|">
+                            (랭킹 없음)
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="fw-semibold"
+                              th:text="${#numbers.formatInteger(player.summit.value, 3, 'COMMA')}">
+                            0
+                        </span>
+                        <span class="text-muted ms-1 small"
+                              th:text="|(${player.summit.rank != null ? player.summit.rank + '위' : '랭킹 없음'})|">
+                            (랭킹 없음)
+                        </span>
+                    </td>
+                    <td>
+                        <span class="fw-semibold"
+                              th:text="${player.tier.displayName()}">
+                            0
+                        </span>
+                    </td>
+                    <td>
+                        <!-- 기록 없음 -->
+                        <span th:if="${player.lastMatchDate == null}"
+                              class="text-muted">
+                            기록없음
+                        </span>
+
+                        <!-- 기록 있음 -->
+                        <th:block th:if="${player.lastMatchDate != null}">
+                            <th:block th:with="
+            days=${T(java.time.temporal.ChronoUnit).DAYS.between(
+                    player.lastMatchDate,
+                    T(java.time.LocalDate).now()
+            )}
+        ">
+                                <span th:if="${days == 0}">오늘</span>
+                                <span th:if="${days > 0 and days < 30}"
+                                      th:text="|${days}일 전|"></span>
+                                <span th:if="${days >= 30 and days < 365}"
+                                      th:text="|${days / 30}개월 전|"></span>
+                                <span th:if="${days >= 365}"
+                                      th:text="|${days / 365}년 전|"></span>
+                            </th:block>
+                        </th:block>
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm" role="group">
+
+                            <!-- 닉네임 변경 -->
+                            <button type="button"
+                                    class="btn btn-outline-secondary nickname-edit-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#nicknameModal"
+                                    th:attr="data-player-id=${player.playerId},
+                                     data-nickname=${player.nickname}">
+                                닉네임 변경
+                            </button>
+
+                            <!-- 경기 등록 -->
+                            <a class="btn btn-outline-primary"
+                               th:href="@{/players/{id}(id=${player.playerId})}">
+                                경기 등록
+                            </a>
+
+                        </div>
+                    </td>
+
+                </tr>
+
+                <!-- empty -->
+                <tr th:if="${#lists.isEmpty(players)}">
+                    <td colspan="4" class="text-center text-muted py-4">
+                        등록된 플레이어가 없습니다.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="nicknameModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">닉네임 관리</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- 닉네임 변경 -->
+                <form id="nicknameForm"
+                      th:action="@{/players/nickname}"
+                      method="post">
+                    <input type="hidden" name="playerId" id="modalPlayerId">
+                    <!-- 조회조건 유지 -->
+                    <input type="hidden" name="nickname" th:value="${query.nickname}">
+                    <input type="hidden" name="server" th:value="${query.server}">
+
+                    <div class="mb-3">
+                        <label class="form-label">현재 닉네임</label>
+                        <input type="text"
+                               class="form-control"
+                               id="currentNickname"
+                               disabled>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">새 닉네임</label>
+                        <input type="text"
+                               class="form-control"
+                               name="newNickname"
+                               required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        닉네임 변경
+                    </button>
+                </form>
+
+                <hr/>
+
+                <!-- 과거 닉네임 -->
+                <h6 class="mb-2">과거 닉네임</h6>
+                <ul class="list-group" id="nicknameHistory">
+                    <li class="list-group-item text-muted">
+                        불러오는 중...
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 랑린이 추가 모달 -->
+<div class="modal fade" id="playerCreateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">랑린이 추가</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form th:action="@{/players}" th:object="${command}" method="post">
+
+                    <!-- 닉네임 -->
+                    <div class="mb-3">
+                        <label class="form-label">닉네임</label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{nickname}"
+                               th:classappend="${#fields.hasErrors('nickname')} ? 'is-invalid' : ''"/>
+
+                        <div class="invalid-feedback"
+                             th:if="${#fields.hasErrors('nickname')}"
+                             th:errors="*{nickname}">
+                        </div>
+                    </div>
+
+                    <!-- 서버 -->
+                    <div class="mb-3">
+                        <label class="form-label">서버</label>
+                        <select class="form-select" th:field="*{server}">
+                            <option value="">-- 선택 --</option>
+                            <option th:each="s : ${servers}"
+                                    th:value="${s.code()}"
+                                    th:text="${s.label()}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- 버튼 -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            등록
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="syncSnapshotModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">어쿄시트 연동</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- 최종 변경일 -->
+                <div class="mb-3">
+                    <label class="form-label">최종 동기화 일자</label>
+                    <input type="text"
+                           class="form-control"
+                           th:value="${snapshotLatestDate.latestDate}"
+                           readonly>
+                </div>
+
+                <!-- URL 수정 -->
+                <div class="mb-3">
+                    <label class="form-label">CSV URL</label>
+                    <input type="text"
+                           class="form-control"
+                           id="snapshotUrl"
+                           th:value="${snapshotLatestDate.updateLink}">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    취소
+                </button>
+                <button class="btn btn-primary" id="snapshotUpdateBtn">
+                    Update
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
