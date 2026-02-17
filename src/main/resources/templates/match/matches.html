@@ -144,8 +144,8 @@
                     <div class="progress-bar"
                          role="progressbar"
                          th:classappend="
-                        ${state.totalRate} >= 70 ? 'bg-success' :
-                        (${state.totalRate} >= 30 ? 'bg-warning' : 'bg-danger')
+                        ${state.totalRate} >= 60 ? 'bg-success' :
+                        (${state.totalRate} >= 40 ? 'bg-warning' : 'bg-danger')
                      "
                          th:style="'width:' + (${state.totalRate} ?: 0) + '%'">
                     </div>
@@ -170,10 +170,7 @@
                 <div class="progress mt-1" style="height: 8px;">
                     <div class="progress-bar"
                          role="progressbar"
-                         th:classappend="
-                        ${state.recentRate()} >= 70 ? 'bg-success' :
-                        (${state.recentRate} >= 30 ? 'bg-warning' : 'bg-danger')
-                     "
+                         th:classappend="${state.recentRate()} >= 60 ? 'bg-success' : (${state.recentRate} >= 40 ? 'bg-warning' : 'bg-danger')"
                          th:style="'width:' + (${state.recentRate} ?: 0) + '%'">
                     </div>
                 </div>

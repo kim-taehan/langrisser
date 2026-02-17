@@ -178,23 +178,22 @@
                     </td>
                     <td>
                         <span class="fw-semibold"
-                              th:text="${#numbers.formatInteger(player.cristal.value, 3, 'COMMA')}">
-                            0
+                              th:text="${player.cristal.rank != null ? player.cristal.rank + '위' : '랭킹 없음'}">
+                            (랭킹 없음)
                         </span>
                         <span class="text-muted ms-1 small"
-                              th:text="|(${player.cristal.rank != null ? player.cristal.rank + '위' : '랭킹 없음'})|">
-                            (랭킹 없음)
+                              th:text="|(${#numbers.formatInteger(player.cristal.value, 3, 'COMMA')})|">
+                            0
                         </span>
                     </td>
-
                     <td>
                         <span class="fw-semibold"
-                              th:text="${#numbers.formatInteger(player.summit.value, 3, 'COMMA')}">
-                            0
+                              th:text="${player.summit.rank != null ? player.summit.rank + '위' : '랭킹 없음'}">
+                            (랭킹 없음)
                         </span>
                         <span class="text-muted ms-1 small"
-                              th:text="|(${player.summit.rank != null ? player.summit.rank + '위' : '랭킹 없음'})|">
-                            (랭킹 없음)
+                              th:text="|(${#numbers.formatInteger(player.summit.value, 3, 'COMMA')})|">
+                            0
                         </span>
                     </td>
                     <td>

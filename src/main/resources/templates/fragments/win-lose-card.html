@@ -27,8 +27,8 @@
                     <div class="progress-bar"
                          role="progressbar"
                          th:classappend="
-                            ${stat.winRate() >= 70} ? ' bg-success' :
-                            (${stat.winRate() <= 30} ? ' bg-danger' : ' bg-warning')
+                            ${stat.winRate() >= 60} ? ' bg-success' :
+                            (${stat.winRate() <= 40} ? ' bg-danger' : ' bg-warning')
                          "
                          th:style="'width:' + ${stat.winRate()} + '%'">
                     </div>

@@ -37,30 +37,26 @@
             <!-- 크리스탈 -->
             <div class="col">
                 <div class="small text-muted mb-1">크리스탈</div>
-
                 <div class="fw-bold text-primary fs-5">
-                    💎 <span th:text="${player.cristal.value}"></span>
+                    💎 <span th:text="${player.cristal.rank}"></span>위
                 </div>
 
                 <div class="small text-muted"
-                     th:if="${player.cristal.rank != null}">
-                    랭킹
-                    <span th:text="${player.cristal.rank}"></span>위
+                     th:if="${player.cristal.value != null}">
+                    크리스탈 갯수
+                    <span th:text="${player.cristal.value}"></span>
                 </div>
             </div>
-
             <!-- 서밋 -->
             <div class="col">
                 <div class="small text-muted mb-1">서밋</div>
-
                 <div class="fw-bold fs-5">
-                    🏔 <span th:text="${player.summit.value}"></span>
+                    🏔 <span th:text="${player.summit.rank}"></span>위
                 </div>
-
                 <div class="small text-muted"
-                     th:if="${player.summit.rank != null}">
-                    랭킹
-                    <span th:text="${player.summit.rank}"></span>위
+                     th:if="${player.summit.value != null}">
+                    서밋 포인트
+                    <span th:text="${player.summit.value}"></span>
                 </div>
             </div>
 

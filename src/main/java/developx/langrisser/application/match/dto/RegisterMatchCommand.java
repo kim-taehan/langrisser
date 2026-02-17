@@ -26,7 +26,7 @@ public record RegisterMatchCommand(
                 playerId,
                 LocalDate.now(),
                 GameMode.CASUAL,
-                Stage.CONFLICT_PLAINS,
+                null,
                 Outcome.WIN,
                 TurnOrder.FIRST,
                 ""

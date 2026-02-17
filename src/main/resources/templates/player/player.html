@@ -191,6 +191,7 @@
 
                                 <div class="col-md-6">
                                     <select class="form-select" th:field="*{gameMode}">
+
                                         <option th:each="m : ${gameModes}"
                                                 th:value="${m}"
                                                 th:text="${m.displayName()}">
@@ -198,11 +199,11 @@
                                     </select>
                                 </div>
                             </div>
-
                             <!-- 2줄 -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <select class="form-select" th:field="*{stage}">
+                                        <option value="">-- 선택 --</option>
                                         <option th:each="s : ${stages}"
                                                 th:value="${s}"
                                                 th:text="${s.displayName()}">
@@ -299,8 +300,9 @@
                                      </span>
                                 </div>
                                 <div class="progress mt-1" style="height: 8px;">
-                                    <div class="progress-bar bg-success"
+                                    <div class="progress-bar"
                                          role="progressbar"
+                                         th:classappend="${state.recentRate()} >= 60 ? 'bg-success' : (${state.recentRate} >= 40 ? 'bg-warning' : 'bg-danger')"
                                          th:style="'width:' + ${state.totalRate} + '%'">
                                     </div>
                                 </div>
@@ -318,8 +320,9 @@
                                     </span>
                                 </div>
                                 <div class="progress mt-1" style="height: 8px;">
-                                    <div class="progress-bar bg-primary"
+                                    <div class="progress-bar"
                                          role="progressbar"
+                                         th:classappend="${state.recentRate()} >= 60 ? 'bg-success' : (${state.recentRate} >= 40 ? 'bg-warning' : 'bg-danger')"
                                          th:style="'width:' + ${state.recentRate} + '%'">
                                     </div>
                                 </div>

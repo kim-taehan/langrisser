@@ -1,7 +1,11 @@
-
-
 server:
-  port: 9998
+  port: 9991
+  shutdown: graceful
+  tomcat:
+    connection-timeout: 30s
+    threads:
+      max: 100
+      min-spare: 10
 
 spring:
   profiles:
@@ -11,16 +15,19 @@ spring:
     name: langrisser
 
   datasource:
-#    url: jdbc:h2:mem:langrisser
-#    url: jdbc:h2:file:./langrisser;DB_CLOSE_ON_EXIT=FALSE
     url: jdbc:h2:file:./langrisser;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 10
+      connection-timeout: 5000
+      max-lifetime: 1800000
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
 #    show-sql: true
 
   h2:
@@ -35,3 +42,17 @@ google:
   sheet:
     base-url: https://docs.google.com/spreadsheets/d/19eLjTpcTDSZLiyTAMJGSBXJkWLAmq7QYs3t9qWEGv40
     csv-path: /export?format=csv&gid=0
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  metrics:
+    web:
+      server:
+        request:
+          autotime:
+            enabled: true

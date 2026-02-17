@@ -1,11 +1,13 @@
 package developx.langrisser.adapter.persistence.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import developx.langrisser.adapter.persistence.PlayerRepositoryCustom;
 import developx.langrisser.application.player.dto.FindPlayerQuery;
 import developx.langrisser.domain.player.Player;
 import developx.langrisser.domain.player.QPlayer;
+import developx.langrisser.domain.player.QPlayerNicknameHistory;
 import developx.langrisser.domain.player.ServerType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -54,10 +56,30 @@ public class PlayerRepositoryImpl implements PlayerRepositoryCustom {
     }
 
     private BooleanExpression nicknameLike(String nickname) {
-        return StringUtils.hasText(nickname)
-                ? player.nickname.likeIgnoreCase("%"+nickname+"%")
-                : null;
+        if (!StringUtils.hasText(nickname)) {
+            return null;
+        }
+
+        QPlayerNicknameHistory history = QPlayerNicknameHistory.playerNicknameHistory;
+
+        return player.nickname.likeIgnoreCase("%" + nickname + "%")
+                .or(
+                        JPAExpressions
+                                .selectOne()
+                                .from(history)
+                                .where(
+                                        history.player.eq(player),
+                                        history.nickname.likeIgnoreCase("%" + nickname + "%")
+                                )
+                                .exists()
+                );
     }
+
+//    private BooleanExpression nicknameLike(String nickname) {
+//        return StringUtils.hasText(nickname)
+//                ? player.nickname.likeIgnoreCase("%"+nickname+"%")
+//                : null;
+//    }
 
     private BooleanExpression nicknameSame(String nickname, List<String> oldNicknames) {
         // 트윈테일츤데레

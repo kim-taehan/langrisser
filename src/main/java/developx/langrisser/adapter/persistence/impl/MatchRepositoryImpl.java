@@ -79,7 +79,7 @@ public class MatchRepositoryImpl implements MatchRepositoryCustom {
                         turnOrderEq(request.turnOrder()),
                         opponentPlayerIdEq(request.opponentPlayerId())
                 )
-                .orderBy(match.id.desc())
+                .orderBy(match.matchDate.desc(), match.id.desc())
                 .limit(limit)
                 .fetch();
     }
